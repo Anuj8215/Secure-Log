@@ -31,11 +31,17 @@ const users = [
 
 const seed = async () => {
   await mongoose.connect(process.env.MONGO_URI);
-  await User.deleteMany({});
+  logger.info('Connected to DB for seeding');
 
   for (const u of users) {
-    const passwordHash = await bcrypt.hash(u.password, SALT_ROUNDS);
-    await User.create({ name: u.name, email: u.email, passwordHash, role: u.role });
+    const exists = await User.findOne({ email: u.email });
+    if (!exists) {
+      const passwordHash = await bcrypt.hash(u.password, SALT_ROUNDS);
+      await User.create({ name: u.name, email: u.email, passwordHash, role: u.role });
+      logger.info(`Created user: ${u.email}`);
+    } else {
+      logger.info(`User already exists, skipping: ${u.email}`);
+    }
   }
 
   logger.info('Seeding complete');

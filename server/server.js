@@ -1,5 +1,7 @@
 //!SECTION : HTTP SERVER ENTRY POINT
 require('dotenv').config();
+const validateEnv = require('./src/config/validateEnv');
+validateEnv();
 const http = require('http');
 const mongoose = require('mongoose');
 const app = require('./src/app');

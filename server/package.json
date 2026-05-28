@@ -6,8 +6,20 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node scripts/clear-ports.js && nodemon server.js",
-    "test": "jest --runInBand --forceExit",
+    "test": "jest --runInBand --forceExit --detectOpenHandles",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage --runInBand --forceExit",
     "seed": "node seed.js"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": ["**/tests/**/*.test.js"],
+    "setupFilesAfterEnv": ["./src/tests/setup.js"],
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "src/controllers/**/*.js",
+      "src/middlewares/**/*.js"
+    ]
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
