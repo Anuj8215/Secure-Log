@@ -3,9 +3,10 @@ const Redis = require('ioredis');
 const logger = require('./logger');
 
 const redis = new Redis({
-  host: process.env.REDIS_HOST || 'localhost',
+  host: process.env.REDIS_HOST,
   port: parseInt(process.env.REDIS_PORT, 10) || 6379,
   password: process.env.REDIS_PASSWORD || undefined,
+  tls: process.env.NODE_ENV === 'production' || process.env.REDIS_HOST?.includes('upstash') ? {} : undefined,
   retryStrategy: (times) => Math.min(times * 50, 2000),
 });
 
