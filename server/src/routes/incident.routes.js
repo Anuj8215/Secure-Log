@@ -12,6 +12,7 @@ const {
   updateIncidentStatus,
   deleteIncident,
 } = require('../controllers/incident.controller');
+const idempotency = require('../middlewares/idempotency');
 
 const router = express.Router();
 
@@ -135,7 +136,7 @@ router.get('/:id', authenticate, getIncidentById);
  *       403:
  *         description: Forbidden — admin or analyst role required
  */
-router.post('/', authenticate, authorize('admin', 'analyst'), validateCreateIncident, validate, createIncident);
+router.post('/', authenticate, authorize('admin', 'analyst'), idempotency, validateCreateIncident, validate, createIncident);
 
 /**
  * @swagger
