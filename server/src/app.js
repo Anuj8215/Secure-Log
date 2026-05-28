@@ -11,6 +11,7 @@ const promClient = require('prom-client');
 const logger = require('./config/logger');
 const redis = require('./config/redis');
 const swaggerSpec = require('./config/swagger');
+const ipBlocklist = require('./middlewares/ipBlocklist');
 
 const app = express();
 
@@ -35,6 +36,11 @@ app.use((req, res, next) => {
   });
   next();
 });
+
+app.use(ipBlocklist);
+app.use('/api/v1/auth', require('./routes/auth.routes'));
+const { auditMiddleware } = require('./middlewares/auditLogger');
+app.use(auditMiddleware);
 
 app.get('/health', (req, res) => {
   const mem = process.memoryUsage();
