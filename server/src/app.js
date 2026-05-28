@@ -41,6 +41,9 @@ app.use(ipBlocklist);
 app.use('/api/v1/auth', require('./routes/auth.routes'));
 const { auditMiddleware } = require('./middlewares/auditLogger');
 app.use(auditMiddleware);
+app.use('/api/v1/incidents', require('./routes/incident.routes'));
+app.use('/api/v1/dashboard', require('./routes/dashboard.routes'));
+app.use('/api/v1/audit', require('./routes/audit.routes'));
 
 app.get('/health', (req, res) => {
   const mem = process.memoryUsage();

@@ -59,6 +59,17 @@ const login = async (req, res, next) => {
         affectedSystem: user.email,
         description: `Login from new IP ${req.ip}. Last known IP: ${lastLogin.ip}`,
       });
+
+      const { emailQueue } = require('../queues/index');
+      await emailQueue.add('new-ip-login', {
+        type: 'new_ip_login',
+        data: {
+          email: user.email,
+          name: user.name,
+          ip: req.ip,
+          time: new Date(),
+        },
+      });
     }
 
     await LoginHistory.create({
